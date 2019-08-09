@@ -7,8 +7,7 @@ Enhance mysql-connector-python pooling.
 
 
 .. |Build Status| image:: https://travis-ci.org/hungrybirder/dbpool-python.svg?branch=master
-   :target: https://travis-ci.org/hungrybirder/dbpool-python:w
-   
+   :target: https://travis-ci.org/hungrybirder/dbpool-python
 .. |PyPI| image:: https://img.shields.io/pypi/v/dbpool.svg
    :target: https://pypi.python.org/pypi/dbpool
 .. |image2| image:: https://img.shields.io/pypi/pyversions/dbpool.svg
