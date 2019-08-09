@@ -2,10 +2,10 @@ language: python
 matrix:
   include:
     - python: 3.6
-      dist: trusty
+      dist: bionic
       sudo: false
     - python: 3.7
-      dist: xenial
+      dist: bionic
       sudo: true
 install: pip install tox-travis
 script: tox
