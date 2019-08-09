@@ -1,19 +1,20 @@
 language: python
 matrix:
   include:
-    - python: 3.6
-      dist: bionic
-      sudo: false
-    - python: 3.7
-      dist: bionic
-      sudo: true
+  - python: 3.6
+    dist: bionic
+    sudo: false
+  - python: 3.7
+    dist: bionic
+    sudo: true
 install: pip install tox-travis
 script: tox
 deploy:
   provider: pypi
+  skip_existing: true
   user: happyworker
   password:
-    secure: HTvU4fG+uh9Dg7YuP+BQ22T1tp1R5Y5Pi2jgM4nUqoeo9KHhar8WXOsbp+7MjTCTFyAdrkY7qUQGBgpAaE2Mc5BMFh5sCt/ZT/n+aWEQdcKYX9bqpXgi1JV/S31s7C06gIoep1R++iT5R/wZ/O7j3BSc1PVOYJ9vwh6RGC2TWTS6qA3bPfjFKqCVfnOApr6roNkG+LZXPXCogIKNZLkmLR2NWq4ibB5JptRianpy/NIa0nq2gg6GgDlmHN1YsDjjs5Kn91IsPtsnUIvM1nifpL1KfxYdCyB4BFJuV+luo5eLIbgP+kX+t+GhDTUFm5JhzDv6My8TYlgfCQKP9zLMzqyMVQjuBF5eIZu7OEYCOyhPt6GoUw9wnVtD7JHNrjAnaeBkhP636/ePYyuwSEpsnus1e7mgAzTIncVpNOJ2FAcIvA9VtHtnmWu0Kgs7VhzIG20TtXIRGfYWlN/9kJBM585VxUjTspJTKhaVNQKzXfaBOI+uPpMfR5yw0phCdd1eEhYbbiC2YRd9VPuI46W86MsQIuI3Dk8PRUYz4Q7Fzw7rXy1OS36RAjIoRwHbuI3OJj7dadoTDoRIxUhZgoiXSbRB7uWqV79xDCmgesjJQPNfsGdXOUtiheN/xcOFt5Bv7WrmHi/NysnDJ3zltRzCbe3FpMtgyo4mv5E7o09G0U0=
+    secure: pVBlXcsmbmHxMzIOl9mKyybVcYZuV5BQPK08zwiTHuElM66Z/0bw09XYQGvkkyPG8caWlMG46kOAtFH8vPh0DZO4YrEjeeKMrXcwZOpgNzVqgNXJ/zQSwLtvmP1uA5AtOG2AbuBpuwRLvJIU5mzdpo/hX8ZYZhpvD1RcvijDnOGowFpgQgK6Y8EQwa6A422Usi4TbB6h4g0geVhdYRQ4sJhgqkbNtuNIAo451DU+Z0GMxekbNBjuBVa/aH5ce4XoEbA/5FnCQlDQua1uqZ6et4zIrT45jMdm2FIbQVB/N2kR69XtxF4NBwQ3Wqtk/WMNKvXnFXdNiwGv+P1cI/sPAMRhn1Y1auq7ctkoyBF+Imw8gdtSC5sAnGz+jd97lmO7RtPBhE58umDcwRhxXQokzoe2gZzBhIEkWJr0+TJG7ISN0gyDe8+jHMBGojmiVZzhbQVpdJNxFgAdczG3hcqcjqk6GO7Mdcr56SUnKIM88syK5r7qj1Ymeau0E9sa0E8MYNnMj4zd2TOprdKDgRpjtW6d9eHxVt+TtfSLLe1aXYYMf3TfkgeQjKGHBXIPqc59dMgd66OOM04eEaEx4YFxYxkxmo6nRPT4lTtgYaBC/0FawGdyRizDy16MVsD8WNzjjEY6sTAg6FjB5QAoUj8dD+/Kfj0qEWEM2rgaPDwMw1w=
   on:
     tags: true
     distributions: sdist

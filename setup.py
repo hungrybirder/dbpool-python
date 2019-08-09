@@ -14,11 +14,15 @@ with open(os.path.join(here, 'dbpool', '__init__.py')) as f:
     version_pat = r'^__version__\s*=\s*[\'""]([^\'""]*)[\'""]'
     version = re.search(version_pat, f.read(), re.MULTILINE).group(1)
 
+with open("README.rst", "r") as fh:
+    long_description = fh.read()
+
 
 def main():
     setup(
         name='dbpool',
         description='Enhance mysql-connector-python pooling',
+        long_description=long_description,
         url='https://github.com/hungrybirder/dbpool-python',
         version=version,
         author=__AUTHOR__,
