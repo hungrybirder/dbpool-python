@@ -7,3 +7,4 @@ include LICENSE
 include tox.ini
 exclude .gitignore
 recursive-include tests *.py
+recursive-include tests *.sql
