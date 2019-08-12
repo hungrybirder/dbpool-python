@@ -7,6 +7,11 @@ matrix:
   - python: 3.7
     dist: bionic
     sudo: true
+services:
+  - mysql
+before_install:
+  - mysql -u root --password="" < tests/travis.sql
+
 install: pip install tox-travis
 script: tox
 deploy:
