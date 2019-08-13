@@ -29,8 +29,8 @@ class TestConnectionError(PoolError):
 
 
 class PoolOption(NamedTuple):
-    min_idle: int = 1
-    max_idle: int = 2
+    min_idle: int
+    max_idle: int
     max_age_in_sec: float = 300.0
     check_idle_interval: float = 60.0
 
