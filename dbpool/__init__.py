@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from pkg_resources import get_distribution
 
 from dbpool.impl import (
     PoolOption,
@@ -17,7 +18,6 @@ __all__ = (
     'get_version',
 )
 
-__version__ = '0.1.5'
-
-def get_version():
-    return __version__
+def get_version() -> str:
+    dist = get_distribution('dbpool')
+    return dist.version
