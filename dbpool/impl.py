@@ -145,7 +145,8 @@ class ConnectionPool:
     def __call__(self, *args, **kwargs):
         while not self._check_idle_event.is_set():
             try:
-                if not self._check_idle_event.wait(timeout=30.0):
+                to = self.option.check_idle_interval
+                if not self._check_idle_event.wait(timeout=to):
                     self.check_idle()
             except Exception as e:
                 logger.error(e)
