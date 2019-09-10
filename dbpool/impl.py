@@ -142,6 +142,16 @@ class ConnectionPool:
     def option(self) -> PoolOption:
         return self._option
 
+    @property
+    def idle_cnt(self) -> int:
+        with self._lock:
+            return self._idle_cnt
+
+    @property
+    def busy_cnt(self) -> int:
+        with self._lock:
+            return self._busy_cnt
+
     def __call__(self, *args, **kwargs):
         while not self._check_idle_event.is_set():
             try:

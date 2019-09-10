@@ -123,5 +123,14 @@ class TestConnectionPool:
             time.sleep(8)
             logger.debug('#2 workers stopped, %s', pool)
 
+        db_conn = pool.borrow_connection()
+        assert db_conn
+        assert pool.busy_cnt > 0
+
         pool.close()
+        assert pool.idle_cnt == 0
+
         logger.debug('after pool stopped, %s', pool)
+        db_conn.close()
+        assert pool.busy_cnt == 0
+        logger.debug('#2. after pool stopped, %s', pool)
