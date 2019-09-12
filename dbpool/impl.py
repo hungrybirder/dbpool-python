@@ -17,7 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 class PoolError(Exception):
-    """base exception"""
+    """Pool Error"""
+
+
+class NoAvailableConnectionError(PoolError):
+    """no available conneciton"""
 
 
 class CreateConnectionError(PoolError):
@@ -29,6 +33,17 @@ class TestConnectionError(PoolError):
 
 
 class PoolOption(NamedTuple):
+    """
+
+    Arguments:
+        min_idle (int): Hold min idle connection count.
+        max_idle (int): Hold max idle connection count.
+        max_age_in_sec (float): When a connection expired, reconnect.
+            Default: 300.0 seconds
+        check_idle_interval (float): Check idle thread run interval time.
+            Default: 60.0 seconds
+
+    """
     min_idle: int
     max_idle: int
     max_age_in_sec: float = 300.0
@@ -68,15 +83,27 @@ class ConnectionQueue(queue.Queue):
 
 
 class PooledConnection(MySQLConnection):
+    """
+    Inherit from ``mysql.connector.MySQLConnection``.
+
+    Client should not create PooledConnection.
+
+    Just call :py:meth:`dbpool.ConnectionPool.borrow_connection`.
+
+    """
+
     def __init__(self, *args, **kwargs):
         self._pool = None
         super().__init__(*args, **kwargs)
         self._last_connected = time.time()
 
-    def set_pool(self, pool: 'Pool') -> None:
+    def set_pool(self, pool: 'ConnectionPool') -> None:
         self._pool = pool
 
     def close(self) -> None:
+        """
+        Return this connection to the pool.
+        """
         if not self._pool:
             super().close()
         else:
@@ -166,6 +193,10 @@ class ConnectionPool:
             return self._closed
 
     def close(self):
+        """
+        Close the :py:class:`ConnectionPool`.
+        Free idle connections.
+        """
         with self._lock:
             self._closed = True
             self._check_idle_event.set()
@@ -175,6 +206,19 @@ class ConnectionPool:
             self._idle_cnt -= self._idle.free_all()
 
     def borrow_connection(self) -> PooledConnection:
+        """
+        Borrow one connection from pool.
+
+        Returns:
+            PooledConnection: The available connection.
+
+        Raises:
+            TestConnectionError: Test ping got error.
+            CreateConnectionError: Create new connection failed.
+            PoolError: When pool is closed.
+            NoAvailableConnectionError: The pool is busy fully.
+
+        """
         if self.is_closed():
             raise PoolError('ConnectionPool is closed!')
         try:
@@ -200,7 +244,7 @@ class ConnectionPool:
         with self._lock:
             total_cnt = self._idle_cnt + self._busy_cnt
             if total_cnt >= self.option.max_idle:
-                raise PoolError('ConnectionPool is full!')
+                raise NoAvailableConnectionError('ConnectionPool is full!')
             try:
                 new_conn = self._create_connection()
             except Exception as e:

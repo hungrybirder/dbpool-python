@@ -8,6 +8,9 @@ from dbpool.impl import (
     PooledConnection,
     ConnectionPool,
     PoolError,
+    NoAvailableConnectionError,
+    CreateConnectionError,
+    TestConnectionError,
 )
 
 __all__ = (
@@ -15,6 +18,9 @@ __all__ = (
     'PooledConnection',
     'ConnectionPool',
     'PoolError',
+    'NoAvailableConnectionError',
+    'CreateConnectionError',
+    'TestConnectionError',
     'get_version',
 )
 
