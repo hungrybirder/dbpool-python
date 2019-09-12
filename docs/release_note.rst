@@ -1,4 +1,1 @@
-Release Note
-============
-
-
+.. include:: ../CHANGES.rst
