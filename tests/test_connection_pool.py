@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def _work(pool: ConnectionPool, quit_event: threading.Event) -> None:
+    logger.info("worker_%d starts", threading.current_thread().ident)
     while not quit_event.is_set():
         try:
             db_conn = pool.borrow_connection()
@@ -27,6 +28,7 @@ def _work(pool: ConnectionPool, quit_event: threading.Event) -> None:
             logger.error(e)
         else:
             db_conn.close()
+    logger.info("worker_%d quits", threading.current_thread().ident)
 
 
 class TestConnectionPool:
@@ -73,7 +75,7 @@ class TestConnectionPool:
 
     def test_concurrency(self):
         pool = self.get_pool(4, 20, 60, 5)
-        logger.debug('init pool, %s', pool)
+        logger.info('init pool, %s', pool)
         assert pool
         workers = []
 
@@ -87,17 +89,18 @@ class TestConnectionPool:
             w.start()
 
         for _ in range(3):
-            time.sleep(10)
-            logger.debug('workers are running, %s', pool)
+            time.sleep(5)
+            logger.info('#1 workers are running, %s', pool)
 
         event1.set()
 
         for w in workers:
             w.join()
 
-        workers.clear()
+        logger.info("#1 all worker quit.")
 
-        time.sleep(10)
+        # workers.clear()
+        workers = []
 
         event2 = threading.Event()
         for _ in range(20):
@@ -109,19 +112,17 @@ class TestConnectionPool:
             w.start()
 
         for _ in range(3):
-            logger.debug('#2 workers are running, %s', pool)
-            time.sleep(10)
+            logger.info('#2 workers are running, %s', pool)
+            time.sleep(5)
 
         event2.set()
 
         for w in workers:
             w.join()
 
-        workers.clear()
+        logger.info("#2 all worker quit.")
 
-        for _ in range(10):
-            time.sleep(8)
-            logger.debug('#2 workers stopped, %s', pool)
+        workers.clear()
 
         db_conn = pool.borrow_connection()
         assert db_conn
@@ -130,7 +131,7 @@ class TestConnectionPool:
         pool.close()
         assert pool.idle_cnt == 0
 
-        logger.debug('after pool stopped, %s', pool)
+        logger.info('after pool stopped, %s', pool)
         db_conn.close()
         assert pool.busy_cnt == 0
-        logger.debug('#2. after pool stopped, %s', pool)
+        logger.info('#2. after pool stopped, %s', pool)
